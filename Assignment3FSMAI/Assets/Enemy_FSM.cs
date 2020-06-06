@@ -69,7 +69,7 @@ public class Enemy_FSM : MonoBehaviour
         //Find a random destination
         GameObject[] destinations = GameObject.FindGameObjectsWithTag("Dest");
         PatrolDestination = destinations[Random.Range(0, destinations.Length)].GetComponent<Transform>();
-        currentState = ENEMY_STATE.PATROL;
+        CurrentState = ENEMY_STATE.PATROL;
 
     }
     public IEnumerator EnemyPatrol()
@@ -86,7 +86,7 @@ public class Enemy_FSM : MonoBehaviour
             {
                 Debug.Log("Find you, changing to CHASE state");
                 agent.isStopped = true;
-                currentState = ENEMY_STATE.CHASE;
+                CurrentState = ENEMY_STATE.CHASE;
                 yield break;
             }
             yield break;
@@ -119,14 +119,14 @@ public class Enemy_FSM : MonoBehaviour
                 if (!checkMyVision.targetInSight)
                 {
                     Debug.Log("Target not in sight so patrolling");
-                    currentState = ENEMY_STATE.PATROL;
+                    CurrentState = ENEMY_STATE.PATROL;
 
                 }
 
                 else
                 {
                     Debug.Log("Target not in sight so patrolling");
-                    currentState = ENEMY_STATE.ATTACK;
+                    CurrentState = ENEMY_STATE.ATTACK;
                 }
                 yield break;
             }
@@ -141,7 +141,7 @@ public class Enemy_FSM : MonoBehaviour
         while (currentState == ENEMY_STATE.ATTACK)
         {
             Debug.Log("I am attacking");
-            agent.isStopped = false;
+            agent.isStopped = true;
             agent.SetDestination(playerTransform.position);
 
             while (agent.pathPending)

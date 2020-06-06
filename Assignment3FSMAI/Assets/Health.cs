@@ -8,14 +8,14 @@ public class Health : MonoBehaviour
     {
         get
         {
-            return HealthPoints;
+            return healthPoints;
         }
         set
         {
-            HealthPoints = value;
+            healthPoints = value;
 
             //What if we reach 0?
-            if (HealthPoints <= 0)
+            if (healthPoints <= 0)
             {
                 Destroy(gameObject);
             }
