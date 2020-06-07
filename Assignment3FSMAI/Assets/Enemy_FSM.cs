@@ -5,7 +5,7 @@ using UnityEngine.AI;
 public class Enemy_FSM : MonoBehaviour
 {
     //enums are nice to keep states 
-    public enum ENEMY_STATE { StandingORIdle, Walk, Run, ATTACK };
+    public enum ENEMY_STATE { StandingORIdle, Walk, Run, Destroyed_Stop, GameOver, ATTACK };
 
     //We need a property to access the current state
 
@@ -21,7 +21,6 @@ public class Enemy_FSM : MonoBehaviour
 
             switch (currentState)
             {
-                
                 case ENEMY_STATE.StandingORIdle:
                     StartCoroutine(EnemyPatrol());
                     break;
@@ -33,19 +32,22 @@ public class Enemy_FSM : MonoBehaviour
                     StartCoroutine(EnemyRun());
                     break;
 
+                case ENEMY_STATE.Destroyed_Stop:
+                    StartCoroutine(EnemyDestroyed());
+                    break;
+
+                case ENEMY_STATE.GameOver:
+                    StartCoroutine(EnemyGameOver());
+                    break;
+
                 case ENEMY_STATE.ATTACK:
                     StartCoroutine(EnemyAttack());
                     break;
 
             }
-            
-
-
         }
-
-         
     }
-    
+
     [SerializeField]
     private ENEMY_STATE currentState;
 
@@ -149,7 +151,6 @@ public class Enemy_FSM : MonoBehaviour
                 }
                 yield break;
             }
-            
 
             //Till next frame
             yield return null;
@@ -163,27 +164,47 @@ public class Enemy_FSM : MonoBehaviour
 
     public IEnumerator EnemyRun()
     {
-        //Like the others start with the loop
+        Debug.Log("Enemy Chase starting");
+        //Again we shall start with a loop
+
         while (currentState == ENEMY_STATE.Run)
         {
-            Debug.Log("I am attacking");
+            //In this case, let us keep sensitivity LOW
+            checkMyVision.sensitivity = CheckMyVision.enmSensitivity.LOW;
+
+            //The idea of the chase is to go to the last known position
             agent.isStopped = false;
-            agent.SetDestination(playerTransform.position);
+            agent.SetDestination(checkMyVision.lastKnownSighting);
 
+            //Again we need to yield if path is yet incomplete
             while (agent.pathPending)
-                yield return null;
-
-            if (agent.remainingDistance > agent.stoppingDistance)
             {
-                CurrentState = ENEMY_STATE.Walk;
+                yield return null;
+            }
+
+            //While chasing we need to keep checking if we reached
+            if (agent.remainingDistance <= agent.stoppingDistance)
+            {
+                agent.isStopped = true;
+
+                //What if we reached destination but cannot see the player?
+
+                if (!checkMyVision.targetInSight)
+                {
+                    Debug.Log("Target not in sight so patrolling");
+                    CurrentState = ENEMY_STATE.StandingORIdle;
+                }
+                else
+                {
+                    Debug.Log("Target in sight so going to attack");
+                    CurrentState = ENEMY_STATE.ATTACK;
+                }
                 yield break;
             }
-            
 
+            //Till next frame
             yield return null;
-
         }
-        yield break;
 
     }
 
@@ -220,5 +241,15 @@ public class Enemy_FSM : MonoBehaviour
         yield break;
 
     }
+    public IEnumerator EnemyGameOver()
+    {
+        yield break;
+    }
+
+    public IEnumerator EnemyDestroyed()
+    {
+        yield break;
+    }
+
 
 }
