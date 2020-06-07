@@ -249,7 +249,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.22
-  m_Speed: 1
+  m_Speed: 2
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
@@ -286,7 +286,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df92bf740dc266047b732f63075b1ff1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sensitivity: 1
+  sensitivity: 0
   targetInSight: 0
   fieldOfVision: 90
   myEyes: {fileID: 179984261}
@@ -333,7 +333,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d32c6cc403e578e4f9c3932e4b12869d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentState: 0
+  currentState: 2
   maxDamage: 10
 --- !u!114 &480814483
 MonoBehaviour:

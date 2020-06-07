@@ -7,6 +7,7 @@ public class FollowDestination : MonoBehaviour
 {
     private NavMeshAgent agent = null;
     public Transform destination = null;
+    // Start is called before the first frame update
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
@@ -16,7 +17,5 @@ public class FollowDestination : MonoBehaviour
     void Update()
     {
         agent.SetDestination(destination.position);
-
-
     }
 }
